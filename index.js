@@ -13,8 +13,13 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFind
     }, (err) => console.log(err));
 
 
-app.use('/task', taskRouter);
+app.use('/tasks', taskRouter);
 
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.statusCode = 500;
+    res.json({ message: err.message });
+});
 
 app.listen(PORT, () => {
     console.log(`App is running at localhost:${PORT}`);
