@@ -55,4 +55,40 @@ router.route('/:id')
             }).catch(next);
     });
 
+router.route('/:id/notes')
+    .get((req, res, next) => {
+        Task.findById(req.params.id)
+            .then((task) => {
+                res.json(task.notes);
+            })
+            .catch(next);
+    })
+    .post((req, res, next) => {
+        Task.findById(req.params.id)
+            .then((task) => {
+                task.notes.push(req.body);
+                task.save()
+                    .then((task) => {
+                        res.json(task.notes);
+                    })
+                    .catch(next);
+            })
+            .catch(next);
+    })
+    .put((req, res) => {
+        res.statusCode = 405;
+        res.json({ message: "Method not allowed" });
+    })
+    .delete((req, res, next) => {
+        Task.findById(req.params.id)
+            .then((task) => {
+                task.notes = [];
+                task.save()
+                    .then((task) => {
+                        res.json(task.notes);
+                    })
+                    .catch(next);
+            })
+            .catch(next);
+    });
 module.exports = router;
